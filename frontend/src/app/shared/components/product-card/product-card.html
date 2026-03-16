@@ -1,0 +1,35 @@
+<div class="product-card" [routerLink]="['/products', product.slug]">
+  <div class="card-image">
+    <img [src]="'https://picsum.photos/seed/' + product.id + '/400/400'" [alt]="product.name" loading="lazy" />
+    @if (hasDiscount) {
+      <span class="discount-badge">-{{ discountPercent }}%</span>
+    }
+    @if (product.is_new) {
+      <span class="new-badge">NEW</span>
+    }
+    @if (product.stock_quantity === 0) {
+      <div class="out-of-stock-overlay">Out of Stock</div>
+    }
+  </div>
+  <div class="card-body">
+    <p class="card-category">{{ product.sku }}</p>
+    <h3 class="card-title">{{ product.name }}</h3>
+    <div class="card-price">
+      <span class="price">${{ displayPrice | number:'1.2-2' }}</span>
+      @if (hasDiscount) {
+        <span class="original-price">${{ product.price | number:'1.2-2' }}</span>
+      }
+    </div>
+    <div class="card-rating">
+      <span class="stars">
+        @for (i of [1,2,3,4,5]; track i) {
+          <span [class.filled]="i <= (product.avg_rating || 0)">★</span>
+        }
+      </span>
+      @if (product.review_count) {
+        <span class="rating-count">({{ product.review_count }})</span>
+      }
+      <span class="views">{{ product.view_count }} views</span>
+    </div>
+  </div>
+</div>

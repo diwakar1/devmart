@@ -1,0 +1,15 @@
+{
+  "name": "@devmart/shared",
+  "version": "1.0.0",
+  "description": "Shared TypeScript models, enums, and DTOs for DevMart frontend and backend",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

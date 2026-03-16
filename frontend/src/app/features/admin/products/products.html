@@ -1,0 +1,82 @@
+<div class="admin-products">
+  <div class="page-header">
+    <h1>Products</h1>
+    <button class="btn btn-primary" (click)="openAdd()">+ Add Product</button>
+  </div>
+
+  @if (loading()) {
+    <p class="loading">Loading products...</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th><th>SKU</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of products(); track p.id) {
+            <tr>
+              <td>
+                <div class="product-cell">
+                  <img [src]="'https://picsum.photos/seed/' + p.id + '/40/40'" alt="" />
+                  <div><strong>{{ p.name }}</strong><br><small>{{ p.slug }}</small></div>
+                </div>
+              </td>
+              <td>{{ p.sku }}</td>
+              <td>${{ p.price | number:'1.2-2' }}</td>
+              <td><span [class.low-stock]="p.stock_quantity < 10">{{ p.stock_quantity }}</span></td>
+              <td><span class="badge" [class.active]="p.is_active" [class.inactive]="!p.is_active">{{ p.is_active ? 'Active' : 'Inactive' }}</span></td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn edit" (click)="openEdit(p)">Edit</button>
+                  <button class="action-btn delete" (click)="deleteProduct(p.id)">Delete</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (showForm) {
+    <div class="modal-overlay" (click)="showForm = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>{{ editingId ? 'Edit' : 'Add' }} Product</h2>
+        <form (ngSubmit)="save()" class="product-form">
+          <div class="form-group"><label>Name</label><input [(ngModel)]="form.name" name="name" (input)="autoSlug()" required /></div>
+          <div class="form-group"><label>Slug</label><input [(ngModel)]="form.slug" name="slug" required /></div>
+          <div class="form-group"><label>Short Description</label><input [(ngModel)]="form.short_description" name="short_desc" /></div>
+          <div class="form-group"><label>Description</label><textarea [(ngModel)]="form.description" name="desc" rows="3"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Price</label><input type="number" [(ngModel)]="form.price" name="price" step="0.01" required /></div>
+            <div class="form-group"><label>Discount Price</label><input type="number" [(ngModel)]="form.discount_price" name="discount" step="0.01" /></div>
+            <div class="form-group"><label>Cost Price</label><input type="number" [(ngModel)]="form.cost_price" name="cost" step="0.01" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>SKU</label><input [(ngModel)]="form.sku" name="sku" required /></div>
+            <div class="form-group"><label>Stock</label><input type="number" [(ngModel)]="form.stock_quantity" name="stock" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Brand</label>
+              <select [(ngModel)]="form.brand_id" name="brand">
+                <option [ngValue]="null">-- Select --</option>
+                @for (b of brands(); track b.id) { <option [ngValue]="b.id">{{ b.name }}</option> }
+              </select>
+            </div>
+          </div>
+          <div class="form-row checkboxes">
+            <label><input type="checkbox" [(ngModel)]="form.is_active" name="active" /> Active</label>
+            <label><input type="checkbox" [(ngModel)]="form.is_featured" name="featured" /> Featured</label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ editingId ? 'Update' : 'Create' }}</button>
+            <button type="button" class="btn btn-outline" (click)="showForm = false">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

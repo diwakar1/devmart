@@ -1,0 +1,43 @@
+<div class="admin-users">
+  <div class="page-header"><h1>Users</h1></div>
+
+  @if (loading()) {
+    <p class="loading">Loading...</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+        <tbody>
+          @for (u of users(); track u.id) {
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="avatar">{{ u.first_name.charAt(0) }}{{ u.last_name.charAt(0) }}</div>
+                  <strong>{{ u.first_name }} {{ u.last_name }}</strong>
+                </div>
+              </td>
+              <td>{{ u.email }}</td>
+              <td>
+                <select [value]="u.role" (change)="changeRole(u, $any($event.target).value)">
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </td>
+              <td>
+                <span class="badge" [class.active]="u.is_active" [class.inactive]="!u.is_active">
+                  {{ u.is_active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>{{ u.created_at | date:'shortDate' }}</td>
+              <td>
+                <button class="action-btn" [class.danger]="u.is_active" (click)="toggleActive(u)">
+                  {{ u.is_active ? 'Deactivate' : 'Activate' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

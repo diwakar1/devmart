@@ -1,0 +1,96 @@
+<header class="header">
+  <div class="container">
+    <!-- Logo -->
+    <a routerLink="/" class="logo" (click)="closeMenus()">
+      <span class="logo-icon">🛒</span>
+      <span class="logo-text">Dev<strong>Mart</strong></span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a routerLink="/products" routerLinkActive="active">Products</a>
+      @if (!auth.isLoggedIn()) {
+        <a routerLink="/track-order" routerLinkActive="active">Track Order</a>
+      }
+    </nav>
+
+    <!-- Search Bar -->
+    <form class="header-search" (ngSubmit)="onSearch()">
+      <span class="material-icons search-icon">search</span>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        name="search"
+        placeholder="Search products..."
+        autocomplete="off"
+      />
+    </form>
+
+    <!-- Right Actions -->
+    <div class="nav-actions">
+      @if (auth.isLoggedIn()) {
+        <a routerLink="/wishlist" class="action-btn" title="Wishlist">
+          <span class="action-icon">♡</span>
+        </a>
+      }
+
+      <a routerLink="/cart" class="action-btn cart-btn" title="Cart">
+        <span class="action-icon">🛒</span>
+        @if (cart.cartItemCount() > 0) {
+          <span class="badge">{{ cart.cartItemCount() }}</span>
+        }
+      </a>
+
+      @if (auth.isLoggedIn()) {
+        <div class="user-menu-wrapper">
+          <button class="user-btn" (click)="toggleUserMenu()">
+            <span class="avatar">{{ auth.currentUser()?.first_name?.charAt(0) || 'U' }}</span>
+            <span class="user-name">{{ auth.currentUser()?.first_name }}</span>
+            <span class="chevron">▾</span>
+          </button>
+
+          @if (userMenuOpen) {
+            <div class="dropdown-menu" (click)="closeMenus()">
+              <a routerLink="/account/profile" class="dropdown-item">👤 My Profile</a>
+              <a routerLink="/account/orders" class="dropdown-item">📦 My Orders</a>
+              <a routerLink="/account/addresses" class="dropdown-item">📍 Addresses</a>
+              @if (auth.isAdmin()) {
+                <div class="dropdown-divider"></div>
+                <a routerLink="/admin" class="dropdown-item admin-link">⚙️ Admin Panel</a>
+              }
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item logout-btn" (click)="auth.logout()">🚪 Logout</button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a routerLink="/login" class="btn btn-outline-primary btn-sm">Sign In</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm">Sign Up</a>
+      }
+
+      <!-- Mobile toggle -->
+      <button class="mobile-toggle" (click)="toggleMobileMenu()">
+        {{ mobileMenuOpen ? '✕' : '☰' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  @if (mobileMenuOpen) {
+    <div class="mobile-nav" (click)="closeMenus()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a routerLink="/products" routerLinkActive="active">Products</a>
+      <a routerLink="/cart" routerLinkActive="active">Cart</a>
+      @if (auth.isLoggedIn()) {
+        <a routerLink="/account/profile">My Profile</a>
+        <a routerLink="/account/orders">My Orders</a>
+        <button (click)="auth.logout()">Logout</button>
+      } @else {
+        <a routerLink="/track-order" routerLinkActive="active">Track Order</a>
+        <a routerLink="/login">Sign In</a>
+        <a routerLink="/register">Sign Up</a>
+      }
+    </div>
+  }
+</header>

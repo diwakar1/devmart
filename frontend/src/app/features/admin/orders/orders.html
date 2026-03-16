@@ -1,0 +1,68 @@
+<div class="admin-orders">
+  <div class="page-header"><h1>Orders</h1></div>
+
+  @if (loading()) {
+    <p class="loading">Loading...</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Order #</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          @for (o of orders(); track o.id) {
+            <tr>
+              <td class="bold">{{ o.order_number }}</td>
+              <td>{{ o.user_id }}</td>
+              <td>{{ o.created_at | date:'shortDate' }}</td>
+
+              <td>${{ o.total_amount | number:'1.2-2' }}</td>
+              <td><span class="status" [style.background]="getStatusColor(o.status)">{{ o.status }}</span></td>
+              <td><button class="action-btn" (click)="viewOrder(o)">Manage</button></td>
+            </tr>
+          }
+          @if (orders().length === 0) {
+            <tr><td colspan="6" class="empty">No orders</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (selectedOrder(); as order) {
+    <div class="modal-overlay" (click)="selectedOrder.set(null)">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Order #{{ order.order_number }}</h2>
+          <button class="close-btn" (click)="selectedOrder.set(null)">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="info-row"><span>Total</span><strong>${{ order.total_amount | number:'1.2-2' }}</strong></div>
+          <div class="info-row"><span>Payment</span><strong>{{ order.payment_method }}</strong></div>
+          <div class="info-row"><span>Date</span><strong>{{ order.created_at | date:'medium' }}</strong></div>
+
+          <div class="manage-section">
+            <h3>Update Status</h3>
+            <div class="inline-form">
+              <select [(ngModel)]="newStatus">
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="refunded">Refunded</option>
+              </select>
+              <button class="btn btn-primary" (click)="updateStatus()">Update</button>
+            </div>
+          </div>
+
+          <div class="manage-section">
+            <h3>Tracking</h3>
+            <div class="inline-form">
+              <input [(ngModel)]="trackingNumber" placeholder="Tracking number" />
+              <button class="btn btn-primary" (click)="updateTracking()">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

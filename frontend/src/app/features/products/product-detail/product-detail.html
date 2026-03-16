@@ -1,0 +1,172 @@
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner-lg"></div>
+  </div>
+} @else if (product(); as p) {
+  <div class="product-detail-page">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a routerLink="/">Home</a> / <a routerLink="/products">Products</a> / <span>{{ p.name }}</span>
+      </nav>
+
+      <div class="detail-grid">
+        <!-- Image -->
+        <div class="product-image">
+          <img [src]="'https://picsum.photos/seed/' + p.id + '/600/600'" [alt]="p.name" />
+          @if (hasDiscount) {
+            <span class="discount-badge">-{{ ((1 - p.discount_price! / p.price) * 100) | number:'1.0-0' }}%</span>
+          }
+        </div>
+
+        <!-- Info -->
+        <div class="product-info">
+          <span class="product-sku">SKU: {{ p.sku }}</span>
+          <h1 class="product-name">{{ p.name }}</h1>
+
+          @if (reviewSummary(); as summary) {
+            <div class="rating-display">
+              <span class="stars">
+                @for (i of [1,2,3,4,5]; track i) {
+                  <span [class.filled]="i <= summary.average">★</span>
+                }
+              </span>
+              <span class="rating-text">{{ summary.average | number:'1.1-1' }} ({{ summary.total }} reviews)</span>
+            </div>
+          }
+
+          <div class="price-section">
+            <span class="current-price">${{ displayPrice | number:'1.2-2' }}</span>
+            @if (hasDiscount) {
+              <span class="original-price">${{ p.price | number:'1.2-2' }}</span>
+            }
+          </div>
+
+          @if (p.short_description) {
+            <p class="short-desc">{{ p.short_description }}</p>
+          }
+
+          <div class="stock-info" [class.in-stock]="p.stock_quantity > 0" [class.out-of-stock]="p.stock_quantity === 0">
+            @if (p.stock_quantity > 0) {
+              <span>✓ In Stock ({{ p.stock_quantity }} available)</span>
+            } @else {
+              <span>✕ Out of Stock</span>
+            }
+          </div>
+
+          @if (p.stock_quantity > 0) {
+            <div class="add-to-cart-section">
+              <div class="quantity-selector">
+                <button (click)="quantity = quantity > 1 ? quantity - 1 : 1">−</button>
+                <input type="number" [(ngModel)]="quantity" min="1" [max]="p.stock_quantity" />
+                <button (click)="quantity = quantity < p.stock_quantity ? quantity + 1 : quantity">+</button>
+              </div>
+              <button class="btn btn-primary btn-lg" (click)="addToCart()">🛒 Add to Cart</button>
+              @if (auth.isLoggedIn()) {
+                <button class="btn btn-outline-heart" (click)="toggleWishlist()" [class.in-wishlist]="wishlistService.isInWishlist(p.id)">
+                  {{ wishlistService.isInWishlist(p.id) ? '❤️' : '♡' }}
+                </button>
+              }
+            </div>
+          }
+
+          <div class="product-meta">
+            @if (p.is_featured) { <span class="tag">⭐ Featured</span> }
+            @if (p.is_new) { <span class="tag new">🆕 New Arrival</span> }
+            <span class="meta-item">👁 {{ p.view_count }} views</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs-section">
+        <div class="tabs">
+          <button [class.active]="activeTab() === 'description'" (click)="activeTab.set('description')">Description</button>
+          <button [class.active]="activeTab() === 'reviews'" (click)="activeTab.set('reviews')">
+            Reviews ({{ reviewSummary()?.total || 0 }})
+          </button>
+        </div>
+
+        @if (activeTab() === 'description') {
+          <div class="tab-content">
+            <p>{{ p.description || 'No description available.' }}</p>
+          </div>
+        } @else {
+          <div class="tab-content reviews-tab">
+            <!-- Review Summary -->
+            @if (reviewSummary(); as summary) {
+              <div class="review-summary-card">
+                <div class="summary-score">
+                  <span class="big-number">{{ summary.average | number:'1.1-1' }}</span>
+                  <div class="stars">★★★★★</div>
+                  <span>{{ summary.total }} reviews</span>
+                </div>
+              </div>
+            }
+
+            <!-- Write Review -->
+            @if (auth.isLoggedIn()) {
+              <div class="write-review">
+                <h3>Write a Review</h3>
+                <div class="form-group">
+                  <label>Rating</label>
+                  <select [(ngModel)]="newRating">
+                    <option [value]="5">★★★★★ Excellent</option>
+                    <option [value]="4">★★★★ Good</option>
+                    <option [value]="3">★★★ Average</option>
+                    <option [value]="2">★★ Poor</option>
+                    <option [value]="1">★ Terrible</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" [(ngModel)]="newTitle" placeholder="Review title" />
+                </div>
+                <div class="form-group">
+                  <label>Comment</label>
+                  <textarea [(ngModel)]="newComment" placeholder="Share your experience..." rows="4"></textarea>
+                </div>
+                <button class="btn btn-primary" (click)="submitReview()">Submit Review</button>
+              </div>
+            }
+
+            <!-- Reviews List -->
+            <div class="reviews-list">
+              @for (review of reviews(); track review.id) {
+                <div class="review-card">
+                  <div class="review-header">
+                    <div class="review-stars">
+                      @for (i of [1,2,3,4,5]; track i) {
+                        <span [class.filled]="i <= review.rating">★</span>
+                      }
+                    </div>
+                    @if (review.title) { <strong>{{ review.title }}</strong> }
+                  </div>
+                  @if (review.comment) { <p>{{ review.comment }}</p> }
+                  <div class="review-footer">
+                    <span class="review-date">{{ review.created_at | date }}</span>
+                    @if (review.is_verified_purchase) { <span class="verified">✓ Verified Purchase</span> }
+                  </div>
+                </div>
+              } @empty {
+                <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Related Products -->
+      @if (relatedProducts().length) {
+        <div class="related-section">
+          <h2>You May Also Like</h2>
+          <div class="related-grid">
+            @for (rp of relatedProducts(); track rp.id) {
+              <app-product-card [product]="rp" />
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

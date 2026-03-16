@@ -1,0 +1,63 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Join DevMart today</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" [(ngModel)]="first_name" name="first_name" placeholder="John" required />
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" [(ngModel)]="last_name" name="last_name" placeholder="Doe" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="john@example.com" required autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              id="password"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="Min 8 chars, uppercase, number, special"
+              required
+              autocomplete="new-password"
+            />
+            <button type="button" class="toggle-password" (click)="showPassword.set(!showPassword())">
+              {{ showPassword() ? '🙈' : '👁️' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Repeat your password" required autocomplete="new-password" />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner"></span> Creating Account...
+          } @else {
+            Create Account
+          }
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+      </div>
+    </div>
+  </div>
+</div>

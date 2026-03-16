@@ -1,0 +1,33 @@
+<div class="wishlist-page">
+  <div class="container">
+    <h1>My Wishlist</h1>
+    @if (wishlistService.wishlist(); as items) {
+      @if (items.length > 0) {
+        <div class="product-grid">
+          @for (item of items; track item.id) {
+            <div class="wishlist-card">
+              <div class="card-image">
+                <img [src]="'https://picsum.photos/seed/' + item.product_id + '/280/280'" alt="Product" />
+              </div>
+              <div class="card-body">
+                <h3>Product #{{ item.product_id }}</h3>
+                <p class="date">Added {{ item.created_at | date:'mediumDate' }}</p>
+                <div class="card-actions">
+                  <a [routerLink]="['/products', item.product_id]" class="btn btn-sm">View</a>
+                  <button class="btn btn-sm btn-danger" (click)="removeFromWishlist(item.product_id)">Remove</button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <span class="empty-icon">❤️</span>
+          <h3>Your wishlist is empty</h3>
+          <p>Browse our products and save your favorites!</p>
+          <a routerLink="/products" class="btn btn-primary">Browse Products</a>
+        </div>
+      }
+    }
+  </div>
+</div>

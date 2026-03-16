@@ -1,0 +1,69 @@
+<app-toast />
+<div class="admin-wrapper" [class.collapsed]="sidebarCollapsed()">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a routerLink="/" class="sidebar-logo">
+        <span>🛒</span>
+        @if (!sidebarCollapsed()) {
+          <span>Dev<strong>Mart</strong></span>
+        }
+      </a>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        {{ sidebarCollapsed() ? '▶' : '◀' }}
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <span class="nav-icon">📊</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Dashboard</span> }
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📦</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Products</span> }
+      </a>
+      <a routerLink="/admin/categories" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">🏷️</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Categories</span> }
+      </a>
+      <a routerLink="/admin/brands" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">🏢</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Brands</span> }
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">🛍️</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Orders</span> }
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">👥</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Users</span> }
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <a routerLink="/" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Back to Store</span> }
+      </a>
+      <button class="nav-item" (click)="auth.logout()">
+        <span class="nav-icon">🚪</span>
+        @if (!sidebarCollapsed()) { <span class="nav-label">Logout</span> }
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="admin-main">
+    <header class="admin-header">
+      <h2>Admin Panel</h2>
+      <div class="admin-user">
+        <span class="avatar">{{ auth.currentUser()?.first_name?.charAt(0) || 'A' }}</span>
+        <span>{{ auth.currentUser()?.first_name }} {{ auth.currentUser()?.last_name }}</span>
+      </div>
+    </header>
+    <div class="admin-content">
+      <router-outlet />
+    </div>
+  </div>
+</div>

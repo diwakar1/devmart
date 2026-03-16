@@ -1,0 +1,93 @@
+<div class="product-list-page">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Products</h1>
+      <div class="header-actions">
+        <div class="search-box">
+          <input type="text" [(ngModel)]="search" placeholder="Search products..." (keyup.enter)="applySearch()" />
+          <button (click)="applySearch()">🔍</button>
+        </div>
+        <button class="filter-toggle" (click)="showFilters.set(!showFilters())">
+          {{ showFilters() ? '✕ Close Filters' : '☰ Filters' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="content-grid" [class.filters-open]="showFilters()">
+      <!-- Sidebar Filters -->
+      <aside class="filters-sidebar" [class.open]="showFilters()">
+        <div class="filter-section">
+          <h3>Categories</h3>
+          <ul>
+            <li><button [class.active]="!filters.category" (click)="setCategory(undefined)">All Categories</button></li>
+            @for (cat of flatCategories(); track cat.id) {
+              <li><button [class.active]="filters.category === cat.id" [class.child-cat]="cat.isChild" (click)="setCategory(cat.id)">{{ cat.isChild ? '└ ' : '' }}{{ cat.name }}</button></li>
+            }
+          </ul>
+        </div>
+
+        <div class="filter-section">
+          <h3>Brands</h3>
+          <ul>
+            <li><button [class.active]="!filters.brand" (click)="setBrand(undefined)">All Brands</button></li>
+            @for (brand of brands(); track brand.id) {
+              <li><button [class.active]="filters.brand === brand.id" (click)="setBrand(brand.id)">{{ brand.name }}</button></li>
+            }
+          </ul>
+        </div>
+
+        <div class="filter-section">
+          <h3>Sort By</h3>
+          <ul>
+            <li><button [class.active]="filters.sortBy === 'created_at'" (click)="setSort('created_at', 'DESC')">Newest</button></li>
+            <li><button [class.active]="filters.sortBy === 'price' && filters.sortOrder === 'ASC'" (click)="setSort('price', 'ASC')">Price: Low to High</button></li>
+            <li><button [class.active]="filters.sortBy === 'price' && filters.sortOrder === 'DESC'" (click)="setSort('price', 'DESC')">Price: High to Low</button></li>
+            <li><button [class.active]="filters.sortBy === 'name'" (click)="setSort('name', 'ASC')">Name: A-Z</button></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Products Grid -->
+      <div class="products-area">
+        @if (loading()) {
+          <div class="loading-grid">
+            @for (i of [1,2,3,4,5,6,7,8]; track i) {
+              <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text short"></div>
+              </div>
+            }
+          </div>
+        } @else if (products().length === 0) {
+          <div class="empty-state">
+            <span class="empty-icon">🔍</span>
+            <h3>No products found</h3>
+            <p>Try adjusting your filters or search terms.</p>
+          </div>
+        } @else {
+          <div class="results-info">
+            <span>Showing {{ products().length }} of {{ pagination()?.total || 0 }} products</span>
+          </div>
+          <div class="product-grid">
+            @for (product of products(); track product.id) {
+              <app-product-card [product]="product" />
+            }
+          </div>
+
+          <!-- Pagination -->
+          @if (pagination() && pagination()!.totalPages > 1) {
+            <div class="pagination">
+              <button [disabled]="pagination()!.page <= 1" (click)="goToPage(pagination()!.page - 1)">← Prev</button>
+              @for (p of pages; track p) {
+                <button [class.active]="p === pagination()!.page" (click)="goToPage(p)">{{ p }}</button>
+              }
+              <button [disabled]="pagination()!.page >= pagination()!.totalPages" (click)="goToPage(pagination()!.page + 1)">Next →</button>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</div>

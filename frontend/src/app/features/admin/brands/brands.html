@@ -1,0 +1,53 @@
+<div class="admin-brands">
+  <div class="page-header">
+    <h1>Brands</h1>
+    <button class="btn btn-primary" (click)="openAdd()">+ Add Brand</button>
+  </div>
+
+  @if (loading()) {
+    <p class="loading">Loading...</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Name</th><th>Slug</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          @for (b of brands(); track b.id) {
+            <tr>
+              <td>
+                <div class="brand-cell">
+                  @if (b.logo_url) { <img [src]="b.logo_url" alt="" /> }
+                  <strong>{{ b.name }}</strong>
+                </div>
+              </td>
+              <td>{{ b.slug }}</td>
+              <td><span class="badge" [class.active]="b.is_active" [class.inactive]="!b.is_active">{{ b.is_active ? 'Active' : 'Inactive' }}</span></td>
+              <td>
+                <button class="action-btn edit" (click)="openEdit(b)">Edit</button>
+                <button class="action-btn delete" (click)="deleteBrand(b.id)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (showForm) {
+    <div class="modal-overlay" (click)="showForm = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>{{ editingId ? 'Edit' : 'Add' }} Brand</h2>
+        <form (ngSubmit)="save()">
+          <div class="form-group"><label>Name</label><input [(ngModel)]="form.name" name="name" (input)="autoSlug()" required /></div>
+          <div class="form-group"><label>Slug</label><input [(ngModel)]="form.slug" name="slug" required /></div>
+          <div class="form-group"><label>Description</label><textarea [(ngModel)]="form.description" name="desc" rows="3"></textarea></div>
+          <div class="form-group"><label>Logo URL</label><input [(ngModel)]="form.logo_url" name="logo" /></div>
+          <label class="checkbox"><input type="checkbox" [(ngModel)]="form.is_active" name="active" /> Active</label>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ editingId ? 'Update' : 'Create' }}</button>
+            <button type="button" class="btn btn-outline" (click)="showForm = false">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

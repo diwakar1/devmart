@@ -1,0 +1,81 @@
+<!-- Hero Banner -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Welcome to <span class="highlight">DevMart</span></h1>
+    <p>Your premium destination for developer tools, gadgets, and accessories. Discover products that boost your productivity.</p>
+    <div class="hero-actions">
+      <a routerLink="/products" class="btn btn-primary">Shop Now</a>
+      <a routerLink="/products" [queryParams]="{isNew: true}" class="btn btn-outline">New Arrivals</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-shape"></div>
+  </div>
+</section>
+
+<!-- Categories -->
+@if (categories().length > 0) {
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Shop by Category</h2>
+        <a routerLink="/categories" class="view-all">View All →</a>
+      </div>
+      <div class="category-grid">
+        @for (cat of categories().slice(0, 6); track cat.id) {
+          <a [routerLink]="['/products']" [queryParams]="{category: cat.id}" class="category-card">
+            <div class="category-icon">
+              <span class="material-icons">{{ getCategoryIcon(cat.slug) }}</span>
+            </div>
+            <h3>{{ cat.name }}</h3>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<!-- Featured Products -->
+@if (featuredProducts().length > 0) {
+  <section class="section section-gray">
+    <div class="container">
+      <div class="section-header">
+        <h2>⭐ Featured Products</h2>
+        <a routerLink="/products" [queryParams]="{isFeatured: true}" class="view-all">View All →</a>
+      </div>
+      <div class="product-grid">
+        @for (product of featuredProducts().slice(0, 8); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<!-- New Arrivals -->
+@if (newArrivals().length > 0) {
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>🆕 New Arrivals</h2>
+        <a routerLink="/products" [queryParams]="{isNew: true}" class="view-all">View All →</a>
+      </div>
+      <div class="product-grid">
+        @for (product of newArrivals().slice(0, 8); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<!-- Promo Banner -->
+<section class="promo-banner">
+  <div class="container">
+    <div class="promo-content">
+      <h2>Free Shipping on Orders Over $50</h2>
+      <p>Shop now and enjoy free delivery on qualifying orders.</p>
+      <a routerLink="/products" class="btn btn-white">Start Shopping</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,140 @@
+.confirmation-page {
+  padding: 3rem 0;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  width: 100%;
+}
+
+.confirmation-card {
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+  color: #1a1a2e;
+  margin: 0 0 0.5rem;
+}
+
+.thank-you {
+  color: #888;
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.order-number {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0 0 2rem;
+  strong { color: #667eea; }
+}
+
+.order-details {
+  text-align: left;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  color: #555;
+
+  &.discount { color: #27ae60; }
+
+  &.total {
+    border-top: 2px solid #eee;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #1a1a2e;
+  }
+}
+
+.status-badge {
+  text-transform: capitalize;
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  &:hover { box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #667eea;
+  color: #667eea;
+  &:hover { background: #667eea; color: #fff; }
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #eee;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: 1rem auto;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 600px) {
+  .confirmation-card { padding: 2rem 1.25rem; }
+  h1 { font-size: 1.4rem; }
+}

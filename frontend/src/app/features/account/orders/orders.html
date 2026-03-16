@@ -1,0 +1,58 @@
+<div class="orders-page">
+  <div class="container">
+    <h1>My Orders</h1>
+
+    @if (loading()) {
+      <div class="loading">Loading orders...</div>
+    } @else if (orders().length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">📦</span>
+        <h3>No orders yet</h3>
+        <p>Start shopping and your orders will appear here!</p>
+        <a routerLink="/products" class="btn btn-primary">Browse Products</a>
+      </div>
+    } @else {
+      <div class="orders-list">
+        @for (order of orders(); track order.id) {
+          <div class="order-card" (click)="viewDetail(order)">
+            <div class="order-header">
+              <span class="order-id">#{{ order.order_number }}</span>
+              <span class="status-badge" [style.background]="getStatusColor(order.status)">{{ order.status }}</span>
+            </div>
+            <div class="order-body">
+              <div class="order-info">
+                <span>{{ order.created_at | date:'mediumDate' }}</span>
+              </div>
+              <div class="order-total">${{ order.total_amount | number:'1.2-2' }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (selectedOrder(); as detail) {
+      <div class="modal-overlay" (click)="closeDetail()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Order #{{ detail.order_number }}</h2>
+            <button class="close-btn" (click)="closeDetail()">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="detail-row">
+              <span>Status</span>
+              <span class="status-badge" [style.background]="getStatusColor(detail.status)">{{ detail.status }}</span>
+            </div>
+            <div class="detail-row"><span>Date</span><strong>{{ detail.created_at | date:'medium' }}</strong></div>
+            <div class="detail-row"><span>Payment</span><strong>{{ detail.payment_method }}</strong></div>
+            <div class="detail-row"><span>Subtotal</span><strong>${{ detail.subtotal | number:'1.2-2' }}</strong></div>
+            <div class="detail-row"><span>Shipping</span><strong>${{ detail.shipping_cost | number:'1.2-2' }}</strong></div>
+            <div class="detail-row total"><span>Total</span><strong>${{ detail.total_amount | number:'1.2-2' }}</strong></div>
+            @if (detail.tracking_number) {
+              <div class="detail-row"><span>Tracking</span><strong>{{ detail.tracking_number }}</strong></div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

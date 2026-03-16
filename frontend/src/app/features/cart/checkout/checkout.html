@@ -1,0 +1,191 @@
+<div class="checkout-page">
+  <div class="container">
+    <h1>Checkout</h1>
+
+    <div class="checkout-grid">
+      <div class="checkout-form">
+        <!-- Shipping Address -->
+        <div class="section-card">
+          <h2>Shipping Address</h2>
+
+          @if (!isGuest) {
+            <!-- Logged-in user: choose from saved addresses -->
+            @if (addresses().length > 0) {
+              <div class="address-list">
+                @for (addr of addresses(); track addr.id) {
+                  <label class="address-option" [class.selected]="selectedAddressId === addr.id">
+                    <input type="radio" name="address" [value]="addr.id" [(ngModel)]="selectedAddressId" />
+                    <div class="address-content">
+                      <strong>{{ addr.full_name }}</strong>
+                      <p>{{ addr.address_line1 }}{{ addr.address_line2 ? ', ' + addr.address_line2 : '' }}</p>
+                      <p>{{ addr.city }}, {{ addr.state }} {{ addr.postal_code }}</p>
+                      <p>{{ addr.phone }}</p>
+                      @if (addr.is_default) { <span class="default-badge">Default</span> }
+                    </div>
+                  </label>
+                }
+              </div>
+            } @else {
+              <p>No addresses found. <a routerLink="/account/addresses">Add an address</a></p>
+            }
+          } @else {
+            <!-- Guest: inline address form -->
+            <div class="guest-address-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="guestName">Full Name *</label>
+                  <input type="text" id="guestName" [(ngModel)]="guestName" placeholder="John Doe" required />
+                </div>
+                <div class="form-group">
+                  <label for="guestEmail">Email *</label>
+                  <input type="email" id="guestEmail" [(ngModel)]="guestEmail" placeholder="john@example.com" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="guestPhone">Phone *</label>
+                <input type="tel" id="guestPhone" [(ngModel)]="guestPhone" placeholder="+1 (555) 123-4567" required />
+              </div>
+              <div class="form-group">
+                <label for="guestAddr1">Address Line 1 *</label>
+                <input type="text" id="guestAddr1" [(ngModel)]="guestAddress1" placeholder="123 Main St" required />
+              </div>
+              <div class="form-group">
+                <label for="guestAddr2">Address Line 2</label>
+                <input type="text" id="guestAddr2" [(ngModel)]="guestAddress2" placeholder="Apt, Suite, Unit (optional)" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="guestCity">City *</label>
+                  <input type="text" id="guestCity" [(ngModel)]="guestCity" placeholder="New York" required />
+                </div>
+                <div class="form-group">
+                  <label for="guestState">State *</label>
+                  <input type="text" id="guestState" [(ngModel)]="guestState" placeholder="NY" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="guestZip">Postal Code *</label>
+                  <input type="text" id="guestZip" [(ngModel)]="guestPostalCode" placeholder="10001" required />
+                </div>
+                <div class="form-group">
+                  <label for="guestCountry">Country</label>
+                  <input type="text" id="guestCountry" [(ngModel)]="guestCountry" placeholder="USA" />
+                </div>
+              </div>
+              <p class="guest-note">
+                Already have an account? <a routerLink="/login">Sign in</a> for a faster checkout.
+              </p>
+            </div>
+          }
+        </div>
+
+        <!-- Payment Method -->
+        <div class="section-card">
+          <h2>Payment Method</h2>
+          <div class="payment-options">
+            <label class="payment-option" [class.selected]="paymentMethod === 'credit_card'">
+              <input type="radio" name="payment" value="credit_card" [(ngModel)]="paymentMethod" />
+              <span>💳 Credit Card</span>
+            </label>
+            <label class="payment-option" [class.selected]="paymentMethod === 'debit_card'">
+              <input type="radio" name="payment" value="debit_card" [(ngModel)]="paymentMethod" />
+              <span>💳 Debit Card</span>
+            </label>
+            <label class="payment-option" [class.selected]="paymentMethod === 'paypal'">
+              <input type="radio" name="payment" value="paypal" [(ngModel)]="paymentMethod" />
+              <span>🅿️ PayPal</span>
+            </label>
+            <label class="payment-option" [class.selected]="paymentMethod === 'cash_on_delivery'">
+              <input type="radio" name="payment" value="cash_on_delivery" [(ngModel)]="paymentMethod" />
+              <span>💵 Cash on Delivery</span>
+            </label>
+          </div>
+
+          @if (paymentMethod === 'credit_card' || paymentMethod === 'debit_card') {
+            <div class="card-form">
+              <div class="form-group">
+                <label for="cardNumber">Card Number
+                  @if (cardType) {
+                    <span class="card-type-badge">{{ cardType }}</span>
+                  }
+                </label>
+                <input type="text" id="cardNumber" [(ngModel)]="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19" (input)="formatCardNumber()" autocomplete="cc-number" />
+              </div>
+              <div class="form-group">
+                <label for="cardName">Name on Card</label>
+                <input type="text" id="cardName" [(ngModel)]="cardName" placeholder="John Doe" autocomplete="cc-name" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="cardExpiry">Expiry Date</label>
+                  <input type="text" id="cardExpiry" [(ngModel)]="cardExpiry" placeholder="MM/YY" maxlength="5" (input)="formatExpiry()" autocomplete="cc-exp" />
+                </div>
+                <div class="form-group">
+                  <label for="cardCvv">CVV</label>
+                  <input type="password" id="cardCvv" [(ngModel)]="cardCvv" placeholder="···" maxlength="4" autocomplete="cc-csc" />
+                </div>
+              </div>
+              <p class="card-note">🔒 This is a demo store. Use these test card numbers:</p>
+              <div class="test-cards">
+                <p><strong>✅ Approved:</strong> 4242 4242 4242 4242 (Visa)</p>
+                <p><strong>✅ Approved:</strong> 5555 5555 5555 4444 (Mastercard)</p>
+                <p><strong>❌ Declined:</strong> 4000 0000 0000 0002</p>
+                <p class="test-hint">Enter the full 16-digit number above. Use any future expiry (e.g. 12/28) and any 3-digit CVV (e.g. 123). CVV does not affect the result — only the card number matters.</p>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Coupon & Notes -->
+        <div class="section-card">
+          <h2>Additional Information</h2>
+          <div class="form-group">
+            <label>Coupon Code</label>
+            <input type="text" [(ngModel)]="couponCode" placeholder="Enter coupon code" />
+          </div>
+          <div class="form-group">
+            <label>Order Notes (optional)</label>
+            <textarea [(ngModel)]="customerNotes" rows="3" placeholder="Any special instructions..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        @if (cartService.cart(); as cart) {
+          @if (cart.items) {
+            @for (item of cart.items; track item.id) {
+              <div class="summary-item">
+                <span>{{ item.product_name || 'Product' }} × {{ item.quantity }}</span>
+                <span>${{ (item.price_snapshot * item.quantity) | number:'1.2-2' }}</span>
+              </div>
+            }
+          }
+        }
+        <div class="summary-divider"></div>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>${{ cartService.cartTotal() | number:'1.2-2' }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>Free</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span>${{ cartService.cartTotal() | number:'1.2-2' }}</span>
+        </div>
+        <button class="btn btn-primary btn-block" [disabled]="submitting() || !canPlaceOrder" (click)="placeOrder()">
+          @if (submitting()) {
+            <span class="spinner"></span> Placing Order...
+          } @else {
+            Place Order
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

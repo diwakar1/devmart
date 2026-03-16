@@ -1,0 +1,52 @@
+<div class="confirmation-page">
+  <div class="container">
+    <div class="confirmation-card">
+      <div class="success-icon">✓</div>
+      <h1>Order Confirmed!</h1>
+      <p class="thank-you">Thank you for your purchase.</p>
+      <p class="order-number">Order #<strong>{{ orderNumber }}</strong></p>
+
+      @if (loading()) {
+        <div class="loading-spinner"></div>
+      } @else if (order(); as o) {
+        <div class="order-details">
+          <div class="detail-row">
+            <span>Status</span>
+            <span class="status-badge">{{ o.status }}</span>
+          </div>
+          <div class="detail-row">
+            <span>Subtotal</span>
+            <span>${{ o.subtotal | number:'1.2-2' }}</span>
+          </div>
+          @if (o.discount_amount) {
+            <div class="detail-row discount">
+              <span>Discount</span>
+              <span>-${{ o.discount_amount | number:'1.2-2' }}</span>
+            </div>
+          }
+          <div class="detail-row">
+            <span>Shipping</span>
+            <span>${{ o.shipping_cost | number:'1.2-2' }}</span>
+          </div>
+          <div class="detail-row">
+            <span>Tax</span>
+            <span>${{ o.tax_amount | number:'1.2-2' }}</span>
+          </div>
+          <div class="detail-row total">
+            <span>Total</span>
+            <span>${{ o.total_amount | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      }
+
+      <div class="actions">
+        @if (auth.isLoggedIn()) {
+          <a routerLink="/account/orders" class="btn btn-primary">View My Orders</a>
+        } @else {
+          <a routerLink="/track-order" class="btn btn-primary">Track Your Order</a>
+        }
+        <a routerLink="/products" class="btn btn-outline">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+</div>

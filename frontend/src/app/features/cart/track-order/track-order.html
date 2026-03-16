@@ -1,0 +1,105 @@
+<div class="track-order-page">
+  <div class="container">
+    <h1>Track Your Order</h1>
+    <p class="subtitle">Enter your order number and email to check the status of your order.</p>
+
+    <div class="lookup-card">
+      <form (ngSubmit)="search()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="orderNum">Order Number</label>
+            <input type="text" id="orderNum" [(ngModel)]="orderNumber" name="orderNumber"
+              placeholder="e.g. ORD-20260310-9195" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" [(ngModel)]="email" name="email"
+              placeholder="Email used during checkout" required />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner"></span> Searching...
+          } @else {
+            🔍 Track Order
+          }
+        </button>
+      </form>
+    </div>
+
+    @if (order(); as o) {
+      <div class="order-result">
+        <div class="result-header">
+          <h2>Order #{{ o.order_number }}</h2>
+          <span class="status-badge" [class]="o.status">{{ o.status }}</span>
+        </div>
+
+        <!-- Progress Steps -->
+        @if (o.status !== 'cancelled' && o.status !== 'refunded') {
+          <div class="progress-tracker">
+            <div class="step" [class.active]="getStatusStep(o.status) >= 1" [class.current]="o.status === 'pending'">
+              <div class="step-circle">1</div>
+              <span>Pending</span>
+            </div>
+            <div class="step-line" [class.active]="getStatusStep(o.status) >= 2"></div>
+            <div class="step" [class.active]="getStatusStep(o.status) >= 2" [class.current]="o.status === 'processing'">
+              <div class="step-circle">2</div>
+              <span>Processing</span>
+            </div>
+            <div class="step-line" [class.active]="getStatusStep(o.status) >= 3"></div>
+            <div class="step" [class.active]="getStatusStep(o.status) >= 3" [class.current]="o.status === 'shipped'">
+              <div class="step-circle">3</div>
+              <span>Shipped</span>
+            </div>
+            <div class="step-line" [class.active]="getStatusStep(o.status) >= 4"></div>
+            <div class="step" [class.active]="getStatusStep(o.status) >= 4" [class.current]="o.status === 'delivered'">
+              <div class="step-circle">4</div>
+              <span>Delivered</span>
+            </div>
+          </div>
+        }
+
+        @if (o.tracking_number) {
+          <div class="tracking-info">
+            <span class="material-icons">local_shipping</span>
+            <div>
+              <strong>Tracking Number:</strong> {{ o.tracking_number }}
+              @if (o.shipping_provider) { <span class="provider">via {{ o.shipping_provider }}</span> }
+            </div>
+          </div>
+        }
+
+        <div class="order-summary-card">
+          <h3>Order Summary</h3>
+          @if (o.items?.length) {
+            <div class="items-list">
+              @for (item of o.items; track item.id) {
+                <div class="item-row">
+                  <span class="item-name">{{ item.product_name }} × {{ item.quantity }}</span>
+                  <span class="item-price">${{ item.total_price | number:'1.2-2' }}</span>
+                </div>
+              }
+            </div>
+          }
+          <div class="summary-divider"></div>
+          <div class="summary-row"><span>Subtotal</span><span>${{ o.subtotal | number:'1.2-2' }}</span></div>
+          @if (o.discount_amount) {
+            <div class="summary-row discount"><span>Discount</span><span>-${{ o.discount_amount | number:'1.2-2' }}</span></div>
+          }
+          <div class="summary-row"><span>Shipping</span><span>${{ o.shipping_amount | number:'1.2-2' }}</span></div>
+          <div class="summary-row"><span>Tax</span><span>${{ o.tax_amount | number:'1.2-2' }}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${{ o.total_amount | number:'1.2-2' }}</span></div>
+        </div>
+
+        <div class="result-footer">
+          <p>Order placed on {{ o.created_at | date:'medium' }}</p>
+          <a routerLink="/products" class="btn btn-outline">Continue Shopping</a>
+        </div>
+      </div>
+    } @else if (searched() && !loading()) {
+      <div class="no-result">
+        <p>No order found. Please double-check your order number and the email you used at checkout.</p>
+      </div>
+    }
+  </div>
+</div>

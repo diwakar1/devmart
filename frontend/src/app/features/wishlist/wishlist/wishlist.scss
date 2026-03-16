@@ -1,0 +1,21 @@
+.wishlist-page { padding: 2rem 0; }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+h1 { font-size: 1.75rem; font-weight: 700; color: #1a1a2e; margin-bottom: 2rem; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+.wishlist-card {
+  background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.2s; &:hover { transform: translateY(-2px); }
+  .card-image { height: 200px; overflow: hidden; img { width: 100%; height: 100%; object-fit: cover; } }
+  .card-body { padding: 1rem; h3 { font-size: 1rem; font-weight: 600; color: #1a1a2e; margin: 0 0 0.25rem; } .date { font-size: 0.8rem; color: #999; margin: 0 0 0.75rem; } }
+  .card-actions { display: flex; gap: 0.5rem; }
+}
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; font-size: 1rem; border: none; cursor: pointer; text-decoration: none; }
+.btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; background: #f0f0f0; color: #333; &:hover { background: #e0e0e0; } }
+.btn-danger { background: #fde8e8; color: #e74c3c; &:hover { background: #e74c3c; color: #fff; } }
+.btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; &:hover { box-shadow: 0 4px 15px rgba(102,126,234,0.3); } }
+.empty-state {
+  text-align: center; padding: 4rem 2rem;
+  .empty-icon { font-size: 4rem; }
+  h3 { font-size: 1.25rem; color: #333; margin: 1rem 0 0.5rem; }
+  p { color: #888; margin-bottom: 1.5rem; }
+}

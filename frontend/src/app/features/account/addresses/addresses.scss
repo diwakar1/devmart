@@ -1,0 +1,40 @@
+.addresses-page { padding: 2rem 0; }
+.container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+h1 { font-size: 1.75rem; font-weight: 700; color: #1a1a2e; margin: 0; }
+
+.address-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+.address-card {
+  background: #fff; border-radius: 12px; padding: 1.25rem; position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 2px solid transparent;
+  &.default { border-color: #667eea; }
+  h3 { margin: 0 0 0.5rem; font-size: 1rem; color: #1a1a2e; }
+  p { margin: 0.15rem 0; font-size: 0.9rem; color: #555; }
+}
+.default-tag { position: absolute; top: 0.75rem; right: 0.75rem; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; background: #667eea; color: #fff; border-radius: 4px; }
+.type-badge { display: inline-block; margin-top: 0.5rem; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; background: #f0edff; color: #764ba2; border-radius: 4px; text-transform: capitalize; }
+.card-actions {
+  display: flex; gap: 0.5rem; margin-top: 0.75rem; border-top: 1px solid #f0f0f0; padding-top: 0.75rem;
+  button {
+    font-size: 0.8rem; font-weight: 600; background: none; border: none; cursor: pointer; color: #667eea;
+    &.danger { color: #e74c3c; }
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.modal-content { background: #fff; border-radius: 16px; padding: 2rem; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; h2 { margin: 0 0 1.5rem; font-size: 1.25rem; color: #1a1a2e; } }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group {
+  margin-bottom: 1rem;
+  label { display: block; font-weight: 600; font-size: 0.85rem; color: #333; margin-bottom: 0.3rem; }
+  input, select { width: 100%; padding: 0.65rem 1rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; outline: none; &:focus { border-color: #667eea; } }
+}
+.checkbox-group { display: flex; align-items: flex-end; label { display: flex; align-items: center; gap: 0.4rem; font-weight: 500; } }
+.form-actions { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.25rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
+.btn-outline { background: #fff; border: 2px solid #ddd; color: #666; }
+.loading { text-align: center; color: #888; }
+.empty-state { text-align: center; padding: 4rem 2rem; .empty-icon { font-size: 4rem; } h3 { color: #333; margin: 1rem 0 0.5rem; } p { color: #888; } }

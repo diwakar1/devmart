@@ -1,0 +1,26 @@
+.admin-products { padding: 1.5rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; margin: 0; }
+
+.table-wrapper { background: #fff; border-radius: 12px; overflow-x: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 0.8rem; font-weight: 600; color: #999; text-transform: uppercase; padding: 0.75rem 1rem; border-bottom: 1px solid #eee; }
+td { padding: 0.75rem 1rem; font-size: 0.9rem; color: #333; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+
+.product-cell { display: flex; align-items: center; gap: 0.75rem; img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; } strong { color: #1a1a2e; } small { color: #999; } }
+.low-stock { color: #e74c3c; font-weight: 600; }
+.badge { padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; &.active { background: #e8f8ef; color: #27ae60; } &.inactive { background: #fde8e8; color: #e74c3c; } }
+.actions { display: flex; gap: 0.5rem; }
+.action-btn { background: none; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; &.edit { color: #667eea; } &.delete { color: #e74c3c; } &:hover { text-decoration: underline; } }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.modal-content { background: #fff; border-radius: 16px; padding: 2rem; width: 90%; max-width: 640px; max-height: 85vh; overflow-y: auto; h2 { margin: 0 0 1.5rem; font-size: 1.25rem; color: #1a1a2e; } }
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.form-group { margin-bottom: 1rem; label { display: block; font-weight: 600; font-size: 0.85rem; color: #333; margin-bottom: 0.3rem; } input, select, textarea { width: 100%; padding: 0.65rem 1rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; outline: none; &:focus { border-color: #667eea; } } textarea { resize: vertical; } }
+.checkboxes { display: flex; gap: 1.5rem; margin-bottom: 1rem; label { display: flex; align-items: center; gap: 0.4rem; font-weight: 500; cursor: pointer; } }
+.form-actions { display: flex; gap: 0.75rem; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.25rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
+.btn-outline { background: #fff; border: 2px solid #ddd; color: #666; }
+.loading { text-align: center; color: #888; }
